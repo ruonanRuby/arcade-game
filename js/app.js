@@ -16,9 +16,7 @@ var Enemy = function (x, y, speed) {
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function (dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
+
     this.x = this.x + this.speed * dt;
     if (this.x > 505) {
         this.x = -100;
@@ -32,6 +30,7 @@ Enemy.prototype.checkCollision = function () {
         player.livesChange(-1);
     }
 }
+
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -42,10 +41,15 @@ Enemy.prototype.render = function () {
     ctx.fillText("Level: " + player.level, 221, 70);
 };
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
 
+/*
+*   player class which keeps track of 
+*   user's movements; update player score when 
+*   he reaches the water-block or hit gums, 
+*   add live when hit heart 
+*   update the level of game everytime when
+*   user reachers the water blocks.
+*/
 class Player {
     constructor() {
         this.x = 202;
@@ -132,6 +136,7 @@ class Player {
 
 }
 
+/* A common function for collision use*/
 function checkCollision(item) {
     if (player.x >= item.x - 50 && player.x <= item.x + 60
         && player.y >= item.y && player.y <= item.y + 40) {
@@ -141,7 +146,7 @@ function checkCollision(item) {
 
 }
 
-
+/* selector class to change the player characters */
 class Selector {
     constructor() {
         this.x = 404;
@@ -171,6 +176,7 @@ class Selector {
     }
 }
 
+/* heart class to random place heart when level % 3 == 2*/
 class Heart {
     constructor( ) {
         this.x = -1000;
@@ -195,6 +201,7 @@ class Heart {
 
 }
 
+/* Random place Gem when level up, and each gem lasts 3 seconds before it collides */
 class Gem {
     constructor( ) {
         this.gems = [{score: 5, path: 'images/Gem Blue.png'}, 
