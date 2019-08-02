@@ -13,7 +13,7 @@
  * writing app.js a little simpler to work with.
  */
 
-var Engine = (function(global) {
+var Engine = (function (global) {
     /* Predefine the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
      * set the canvas element's height/width and add it to the DOM.
@@ -23,6 +23,8 @@ var Engine = (function(global) {
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
         lastTime;
+
+    let currentState = 'inGame';
 
     canvas.width = 505;
     canvas.height = 606;
@@ -63,7 +65,6 @@ var Engine = (function(global) {
      * game loop.
      */
     function init() {
-        reset();
         lastTime = Date.now();
         main();
     }
@@ -79,7 +80,6 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        checkCollisions();
     }
 
     /* This is called by the update function and loops through all of the
@@ -90,20 +90,29 @@ var Engine = (function(global) {
      * render methods.
      */
     function updateEntities(dt) {
-        allEnemies.forEach(function(enemy) {
-            enemy.update(dt);
-        });
-        player.update();
+        switch (currentState) {
+            case 'inGame':
+                allEnemies.forEach(function (enemy) {
+                    enemy.update(dt);
+                });
+                player.update();
+                selector.update();
+                if (heart.x !== -1000) {
+                    heart.update();
+                }
+                gem.update();
+                if (player.lives === 0) {
+                    currentState = 'gameEnds';
+                }
+                break;
+
+            case 'gameEnds':
+                reset();
+                break;
+
+        }
     }
-    
-    /*
-     * 
-     *
-     */
-    function checkCollisions() {
-       
-    }
-     
+
 
     /* This function initially draws the "game level", it will then call
      * the renderEntities function. Remember, this function is called every
@@ -116,19 +125,19 @@ var Engine = (function(global) {
          * for that particular row of the game level.
          */
         var rowImages = [
-                'images/water-block.png',   // Top row is water
-                'images/stone-block.png',   // Row 1 of 3 of stone
-                'images/stone-block.png',   // Row 2 of 3 of stone
-                'images/stone-block.png',   // Row 3 of 3 of stone
-                'images/grass-block.png',   // Row 1 of 2 of grass
-                'images/grass-block.png'    // Row 2 of 2 of grass
-            ],
+            'images/water-block.png',   // Top row is water
+            'images/stone-block.png',   // Row 1 of 3 of stone
+            'images/stone-block.png',   // Row 2 of 3 of stone
+            'images/stone-block.png',   // Row 3 of 3 of stone
+            'images/grass-block.png',   // Row 1 of 2 of grass
+            'images/grass-block.png'    // Row 2 of 2 of grass
+        ],
             numRows = 6,
             numCols = 5,
             row, col;
 
         // Before drawing, clear existing canvas
-        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         /* Loop through the number of rows and columns we've defined above
          * and, using the rowImages array, draw the correct image for that
@@ -158,11 +167,26 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
-        allEnemies.forEach(function(enemy) {
-            enemy.render();
-        });
-
+        selector.render();
         player.render();
+        switch (currentState) {
+            case 'inGame':
+                allEnemies.forEach(function (enemy) {
+                    enemy.render();
+                });
+
+                heart.render();
+                gem.render();
+                break;
+
+            case 'gameEnds':
+                ctx.fillStyle = 'Red';
+                ctx.font = "32px Comic San MS";
+                ctx.fillText("Well Done!", 180, 230);
+                ctx.fillText("Press Enter to Play Again!", 100, 300);
+                break;
+
+        }
     }
 
     /* This function does nothing but it could have been a good place to
@@ -170,8 +194,13 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        player.x = 202;
-        player.y = 400;
+        player.collionDetected();
+        document.addEventListener('keyup', function (e) {
+            if (e.keyCode === 13) {
+                this.location.reload();
+            }
+        });
+
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -184,7 +213,15 @@ var Engine = (function(global) {
         'images/grass-block.png',
         'images/enemy-bug.png',
         'images/char-boy.png',
-        'images/char-cat-girl.png'
+        'images/char-cat-girl.png',
+        'images/char-horn-girl.png',
+        'images/char-pink-girl.png',
+        'images/char-princess-girl.png',
+        'images/selector.png',
+        'images/Heart.png',
+        'images/Gem Blue.png',
+        'images/Gem Green.png',
+        'images/Gem Orange.png'
     ]);
     Resources.onReady(init);
 
