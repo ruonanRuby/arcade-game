@@ -151,7 +151,7 @@ class Selector {
     constructor() {
         this.x = 404;
         this.y = 400;
-        this.sprite = 'images/selector.png';
+        this.sprite = 'images/Selector.png';
         this.characters = ['images/char-boy.png', 'images/char-cat-girl.png', 'images/char-horn-girl.png', 'images/char-pink-girl.png',
             'images/char-princess-girl.png'];
         this.index = 0;
