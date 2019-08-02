@@ -226,10 +226,10 @@ class Gem {
     gemReset() {
         this.y = 68 + 83 * Math.floor(Math.random() * 3 );
         this.x = 101 * Math.floor(Math.random() * 4);
-            setTimeout( () => {
-                this.x = -1000;
-                this.y = -1000;
-            }, 3000);
+        setTimeout( () => {
+            this.x = -1000;
+            this.y = -1000;
+        }, 3000);
     }
 
     render() {

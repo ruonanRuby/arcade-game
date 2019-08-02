@@ -182,7 +182,7 @@ var Engine = (function (global) {
             case 'gameEnds':
                 ctx.fillStyle = 'Red';
                 ctx.font = "32px Comic San MS";
-                ctx.fillText("Well Done!", 180, 230);
+                ctx.fillText("Game Ends!", 180, 230);
                 ctx.fillText("Press Enter to Play Again!", 100, 300);
                 break;
 
